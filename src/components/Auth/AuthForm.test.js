@@ -2,6 +2,8 @@ import AuthForm from "./AuthForm";
 import { render,screen } from "@testing-library/react";
 import store from "../../store/store";
 import { Provider } from 'react-redux';
+import userEvent from '@testing-library/user-event'
+
 
 
 
@@ -41,7 +43,37 @@ describe('AuthForm Testing', ()=>{
         render(<Provider store={store}>
             <AuthForm/>
         </Provider>)
-        const linkElement = screen.getByRole('link')
+        const linkElement = screen.getByText('Login With', {exact:false})
         expect(linkElement).toBeInTheDocument
+    })
+
+    test('Redirect to Login Page', ()=>{
+        render(<Provider store={store}>
+            <AuthForm/>
+        </Provider>)
+
+        const linkElement = screen.getByText('Login with existing account')
+        userEvent.click(linkElement)
+
+        const loginText = screen.getByText('Your Email') 
+        expect(loginText).toBeInTheDocument
+
+
+
+    })
+
+    test('Create New Account Exists', ()=>{
+        render(<Provider store={store}>
+            <AuthForm/>
+        </Provider>)
+
+        const linkElement = screen.getByText('Login with existing account')
+        userEvent.click(linkElement)
+
+        const loginText = screen.getByText('Create new account') 
+        expect(loginText).toBeInTheDocument
+
+
+
     })
 })
